@@ -16,22 +16,22 @@ The code is implemented in Python using the Pandas library for data manipulation
 import pandas as pd
 import os
 
-winfutcandle5min = pd.read_excel('winfut_5min.xlsx')
-winfutcandle5min['Data'] = pd.to_datetime(winfutcandle5min['Data'], dayfirst=True) 
-winfutcandle5min = winfutcandle5min.sort_values(by='Data', ascending=True)
-winfutcandle5min = winfutcandle5min.set_index('Data')
+winfutrenko = pd.read_excel('winfutrenko.xlsx')
+winfutrenko['Data'] = pd.to_datetime(winfutrenko['Data'], dayfirst=True) 
+winfutrenko = winfutrenko.sort_values(by='Data', ascending=True)
+winfutrenko = winfutrenko.set_index('Data')
 
 **2- Data Visualization**
 
-winfutcandle5min.plot.line(y="Fechamento", use_index=True)
+winfutrenko.plot.line(y="Fechamento", use_index=True)
 
 **3- Model Creation and Training (Random Forest)**
 
 from sklearn.ensemble import RandomForestClassifier
 
 model = RandomForestClassifier(n_estimators=200, min_samples_split=50, random_state=1)
-train = winfutcandle5min.iloc[:-100]
-test = winfutcandle5min.iloc[-100:]
+train = winfutrenko.iloc[:-100]
+test = winfutrenko.iloc[-100:]
 predictors = ["Fechamento", "Volume Quantidade", "Abertura", "Máxima", "Mínima"]
 model.fit(train[predictors], train["Alvo"])
 
@@ -45,7 +45,7 @@ print(f"Precision Score: {precision}")
 
 **5- Backtesting and Results Analysis**
 
-predictions = backtest(winfutcandle5min, model, predictors)
+predictions = backtest(winfutrenko, model, predictors)
 precision_backtest = precision_score(predictions["Alvo"], predictions["Previsoes"])
 print(f"Precision Score (Backtest): {precision_backtest}")
 
